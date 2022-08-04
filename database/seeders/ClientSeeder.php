@@ -18,9 +18,9 @@ class ClientSeeder extends Seeder
         \App\Models\Client::factory()->create([
             'client_name' => 'Rafi',
             'client_email' => 'rafi122@gmail.com',
-            'client_password' => md5('12345679'),
-            'client_dob' => 'Male',
-            'client_gender' => '12-06-1997',
+            'client_password' => '12345678',
+            'client_dob' => '12-06-1997',
+            'client_gender' => 'Male',
             'client_bg' => 'O+',
             'client_phone' => '01133257623',
             'client_address' => '126, Badda',

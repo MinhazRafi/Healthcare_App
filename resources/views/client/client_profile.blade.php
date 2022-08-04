@@ -42,6 +42,12 @@
     </div>
 
     <div class="col-md-4 form-group">
+        <span>Password</span>
+        <input type="password" name="client_password" value="{{Session::get('client_password')}}"class="form-control">
+
+    </div>
+
+    <div class="col-md-4 form-group">
         <span>Phone No</span>
         <input type="text" name="client_phone" value="{{Session::get('client_phone')}}" class="form-control">
     </div>

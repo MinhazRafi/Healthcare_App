@@ -29,8 +29,9 @@ return new class extends Migration
             $table->string('doctor_email')->unique();
             $table->string('doctor_password');
             $table->string('doctor_gender');
-            $table->string('doctor_bg');
+            $table->string('doctor_bg'); 
             $table->string('doctor_phone');
+            $table->string('doctor_specialized');
         });
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Doctor;
+use App\Models\Appointment;
 use App\Http\Requests\StoreClientRequest;
 use App\Http\Requests\UpdateClientRequest;
 use Illuminate\Http\Request;
@@ -110,11 +111,14 @@ class ClientController extends Controller
         if($c){
            session()->put('session_email',$c->client_email);
            session()->put('client_name',$c->client_name);
+           session()->put('client_id',$c->id);
+           session()->put('client_password',$c->client_password);
 
            session()->put('client_dob',$c->client_dob);
            session()->put('client_phone',$c->client_phone);
 
            session()->put('client_address',$c->client_address);
+
             return redirect()->route('home');
         }
         else {
@@ -126,7 +130,12 @@ class ClientController extends Controller
 
     public function home()
     {
-        return view('client.client_home');
+        $app = Appointment::where('client_id',session()->get('client_id'))->simplePaginate(5);
+
+        $app2 = Appointment::where('client_id',session()->get('client_id'))->get();
+        $app2 = count($app2);
+
+        return view('client.client_home')->with("app",$app)->with("count",$app2);
     }
 
 
@@ -197,7 +206,9 @@ class ClientController extends Controller
             "client_name"=>'required|string|min:3|max:10',
             "client_dob"=>'required|before:-3 years',
             "client_phone"=>'required|numeric|min:11',
-            "client_address"=>'required|string|max:50'
+            "client_address"=>'required|string|max:50',
+            "client_password"=>'required',
+
         ],
         [
             "client_name.required"=>"Please provide your name",
@@ -205,6 +216,7 @@ class ClientController extends Controller
             "client_dob.before"=>"Must be more than 3 years to registration",
             "client_phone.numeric"=>"Phone number must be an integer number",
             "client_address.required"=>"Please provide your address",
+            "client_password.required"=>"Please provide your password",
                            
         ]
 
@@ -224,6 +236,9 @@ class ClientController extends Controller
     $c->client_address = $request->client_address;
     $request->session()->put('client_address',$request->client_address);
 
+    $c->client_password = $request->client_password;
+    $request->session()->put('client_password',$request->client_password);
+
     $r = $c->save();
 
     if($r)
@@ -240,5 +255,55 @@ class ClientController extends Controller
 
         return view('client.doctorList')->with("d",$doctors);
     } 
+
+    public function appointment(Request $request)
+    {
+        $ddt = Doctor::where('id',$request->id)->first();
+
+        return view('client.book_appointment')->with("doctors",$ddt);
+
+    }
+
+    public function appointmentted(Request $request)
+    {
+        $validate = $request->validate([
+            "doctor_name_b"=>'required',
+            "doctor_date_appointment_b"=>'required',
+            "doctor_appointment_time_b"=>'required',
+            "doctor_appointment_description_b"=>'required'
+        ],
+        ['doctor_date_appointment_b.required'=>"Specify your appointment date",
+        'doctor_appointment_time_b.required'=>"Specify your appointment time",
+        'doctor_appointment_description_b.required'=>"Specify your problem", 
+        ]
+    );
+
+      $cs = Client::where('id',session()->get('client_id'))->first();
+
+      $appointment=new Appointment();
+
+      $appointment->client_id=$cs->id;
+
+      $appointment->date=$request->doctor_date_appointment_b;
+      $appointment->time=$request->doctor_appointment_time_b;
+      $appointment->description=$request->doctor_appointment_description_b;
+      $appointment->doctor_id=$request->doctor_id;
+
+      $app = $appointment->save();
+
+      if($app)
+      {
+        return redirect()->back()->with('success', 'Appointment setup successfully');
+      }
+
+    }
+
+    public function deleteAppointment(Request $request){
+        $student = Appointment::where('id', $request->id)->first();
+        $student->delete();
+
+        return redirect()->route('home');
+    }
+
 
 }

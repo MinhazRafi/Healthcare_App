@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title></title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous">
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+      
+      
+</head>
+
+
+
+<body onload="loadDoc()">
+  <div class="container">    
+      <h1 style="text-align:center">Product List API Test</h1>
+      <table class="table table-border">
+        <tr>
+          <th>Product Name</th>
+          <th>ID</th>
+          <th>Price(TK)</th>
+          <th>Stock</th>
+        </tr>
+            <tbody id="List">
+
+            </tbody>
+      </table>
+
+      <script>
+            function loadDoc() {
+                  const xhttp = new XMLHttpRequest();
+                  xhttp.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+                              var obj_arr = JSON.parse(this.responseText);
+                              if (obj_arr.length > 0) {
+                                    var Data = "";
+                                    obj_arr.forEach((info) => {
+                                          Data += "<tr>";
+                                          Data += "<td>" + info.product_name + "</td>";
+                                          Data += "<td>" + info.id + "</td>";
+                                          Data += "<td>" + info.product_price + "</td>";
+                                          Data += "<td>" + info.product_stock + "</td>";
+                                          
+                                    })
+                                    document.getElementById("List").innerHTML = Data;
+                              }
+                        }
+                  };
+                  xhttp.open("GET", "http://127.0.0.1:8000/api/list");
+                  xhttp.send();
+            }
+      </script>
+      </div>
+</body>
+
+</html>

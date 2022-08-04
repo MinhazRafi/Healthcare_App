@@ -16,10 +16,10 @@ class AdminSeeder extends Seeder
     public function run()
     {
         \App\Models\Admin::factory()->create([
-            'name' => 'Riad',
-            'email' => 'riadkowser@gmail.com',
-            'password' => md5('987654'),
-            'phone' => '01777777799',
+            'admin_name' => 'Riad',
+            'admin_email' => 'riadkowser@gmail.com',
+            'admin_password' => md5('987655'),
+            'admin_phone' => '01555555599',
         ]);
         
     }

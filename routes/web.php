@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\ProductController;
 
 
 /*
@@ -44,5 +45,15 @@ Route::post('/client/appointment',[ClientController::class,"appointmentted"])->n
 Route::get('/client/home/{id}',[ClientController::class,"deleteAppointment"])->name("deleteAppointment");
 
 
+Route::get('/doctors',[ClientController::class,"doctorList"])->name("doctorList");
 
+//Product List
+Route::get('productlist',[ProductController::class, 'list'])->name('productlist');
+
+//add product
+Route::get('/addProduct', function () {
+    return view('addProduct');
+});
+
+Route::post('/addProduct',[ProductController::class, 'add'])->name('add');
 
